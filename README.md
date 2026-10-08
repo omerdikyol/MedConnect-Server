@@ -1,22 +1,32 @@
-# MedConnect-Server
-This repository contains the API server for the Medical Appointment Scheduling App. The server is built using Node.js with TypeScript and Express, and it communicates with a MongoDB database to manage appointments and patient data.
+# MedConnect API
 
-**Features**
+The Express/TypeScript backend for [MedConnect’s patient frontend](https://github.com/omerdikyol/MedConnect). It stores users, doctor availability, appointments, and uploaded analysis metadata in MongoDB.
 
-Appointment Management: The API server provides endpoints to manage appointments, including creating new appointments, retrieving appointment details, updating appointments, and canceling appointments.
+This repository is a fork of [the upstream server](https://github.com/LucaStefan112/MedConnect-Server). Preserve upstream attribution when using or describing the code; the fork is part of a shared project history.
 
-Patient Data Management: The server handles patient data, allowing for the creation and retrieval of patient profiles, including personal information and uploaded medical analyses.
+## Local development
 
-API Authentication: The server supports authentication mechanisms to ensure secure access to the API endpoints. It verifies user credentials and provides access tokens for authorized users.
+```sh
+git clone https://github.com/omerdikyol/MedConnect-Server.git
+cd MedConnect-Server
+npm install
+npx tsc
+```
 
-**Technologies Used**
+Configure `.env` for your own environment before starting: [the database connection](src/db/connection.ts) reads `USERNAME` and `PASSWORD` and contains a project-specific MongoDB connection target. [The server entry point](src/index.ts) reads `PORT`; authentication utilities use `APP_SECRET`. Adapt the connection target for your own database rather than assuming credentials alone make it portable.
 
-The API server is built using the following technologies:
+```sh
+npm start
+```
 
-Node.js: Node.js is a JavaScript runtime that allows for server-side development. It provides an event-driven architecture and a vast ecosystem of modules.
+For development, run `npm run tsc:w` in one terminal and `npm run start:dev` in another. The latter watches the compiled `build` output.
 
-TypeScript: TypeScript is a statically typed superset of JavaScript that brings type-checking capabilities to the application. It enhances code quality and improves developer productivity by catching errors at compile-time.
+## API organization
 
-Express: Express is a popular web framework for Node.js that simplifies the creation of robust APIs. It provides a set of middleware and utility functions for handling HTTP requests and building RESTful APIs.
+- `/users`: registration and user routes.
+- `/doctors`: doctor-related routes.
+- `/appointments`: scheduling and appointment actions.
+- `/analyses`: upload and analysis routes.
+- `/specialisations` and `/check-auth`: lookup and authentication helpers.
 
-MongoDB: MongoDB is a NoSQL document database that stores data in flexible, JSON-like documents. It provides scalability and flexibility, making it suitable for managing various types of data.
+[Routes](src/routes), [controllers](src/controllers), and [models](src/models) show the request-to-database flow. The current `npm test` script is a placeholder, not a backend test suite. Treat this as a development case study and review role assignment, ownership checks, and upload handling before a public deployment.
